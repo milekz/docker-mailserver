@@ -55,6 +55,8 @@ RUN apt-get update -q --fix-missing && \
     postfix-ldap \
     postfix-pcre \
     postfix-policyd-spf-python \
+    postfix-pgsql \
+    libpam-pgsql \
     postsrsd \
     pyzor \
     razor \
@@ -85,6 +87,7 @@ RUN apt-get update -q --fix-missing && \
     dovecot-managesieved \
     dovecot-pop3d \
     dovecot-sieve \
+    dovecot-pgsql \
     && \
   apt-get autoclean && \
   rm -rf /var/lib/apt/lists/* && \
