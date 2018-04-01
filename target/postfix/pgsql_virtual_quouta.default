@@ -1,0 +1,4 @@
+table = passwd,domains
+select_field = quota_mail
+where_field = passwd.login || '@' || domains.name
+additional_conditions = AND  passwd.domainid = domains.id
