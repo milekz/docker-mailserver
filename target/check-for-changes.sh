@@ -2,13 +2,10 @@
 
 # create date for log output
 log_date=$(date +"%Y-%m-%d %H:%M:%S ")
-# Prevent a start too early
-sleep 5
+
 echo "${log_date} Start check-for-changes script."
 
 #pgsql stuff here
-
-
 
 if [ ! -v USE_PGSQL_DATABASE ] #note the lack of a $ sigil
 then
@@ -41,7 +38,6 @@ else
 while true; do
 sleep 2
 done
-exit
 
 fi
 
