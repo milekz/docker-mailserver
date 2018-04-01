@@ -25,14 +25,21 @@ else
     echo "host = ${PGSQL_DATABASE_HOST}" >> /etc/pam_pgsql.conf
     echo "password = ${PGSQL_DATABASE_PASSWORD}" >> /etc/pam_pgsql.conf
     echo "port = ${PGSQL_DATABASE_PORT}" >> /etc/pam_pgsql.conf
+    #for postfix
+    echo "dbname = ${PGSQL_DATABASE_NAME}" > /tmp/pgsql.conf
+    echo "user = ${PGSQL_DATABASE_USER}" >> /tmp/pgsql.conf
+    echo "hosts = ${PGSQL_DATABASE_HOST}:${PGSQL_DATABASE_PORT}" >> /tmp/pgsql.conf
+    echo "password = ${PGSQL_DATABASE_PASSWORD}" >> /tmp/pgsql.conf    
+    #
     #prepare main.cf
     sed -i '/virtual_/d' /etc/postfix/main.cf
     cat /tmp/pgsql_virtual_postfix.conf >> /etc/main.cf
     rm -f /tmp/pgsql_virtual_postfix.conf
     #do postgres virtual stuff here
     for filename in /tmp/pgsql_virtual_*; do
-	    cat /etc/pam_pgsql.conf ${filename} > ${filename}.cf
+	    cat /tmp/pgsql.conf ${filename} > ${filename}.cf
     done
+    rm -f /tmp/pgsql.conf
     mv /tmp/pgsql_virtual_*.cf /etc/postfix/ && rm -f /tmp/pgsql_virtual_*
     echo "pw_type=crypt" >> /etc/pam_pgsql.conf
     echo "auth_query=SELECT passwd.password FROM domains LEFT JOIN passwd ON domains.id = passwd.domainid where (passwd.login::text || '@'::text) || domains.name::text = %u" >> /etc/pam_pgsql.conf
