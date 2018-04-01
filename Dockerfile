@@ -129,6 +129,9 @@ RUN sed -i -e 's/include_try \/usr\/share\/dovecot\/protocols\.d/include_try \/e
 COPY target/dovecot/dovecot-ldap.conf.ext /etc/dovecot
 COPY target/postfix/ldap-users.cf target/postfix/ldap-groups.cf target/postfix/ldap-aliases.cf target/postfix/ldap-domains.cf /etc/postfix/
 
+# PGSQL virtual conf for postfix
+COPY target/postfix/pgsql_virtual_*.default /etc/postfix/
+
 # Enables Spamassassin CRON updates and update hook for supervisor
 RUN sed -i -r 's/^(CRON)=0/\1=1/g' /etc/default/spamassassin && \
     sed -i -r 's/^\$INIT restart/supervisorctl restart amavis/g' /etc/spamassassin/sa-update-hooks.d/amavisd-new
