@@ -132,6 +132,9 @@ COPY target/postfix/ldap-users.cf target/postfix/ldap-groups.cf target/postfix/l
 # PGSQL virtual queries for postfix
 COPY target/postfix/pgsql_virtual_* /tmp/
 
+#Dovecot PSQL queries
+COPY target/dovecot/dovecot-pgsql.conf.ext /etc/dovecot/
+
 # Enables Spamassassin CRON updates and update hook for supervisor
 RUN sed -i -r 's/^(CRON)=0/\1=1/g' /etc/default/spamassassin && \
     sed -i -r 's/^\$INIT restart/supervisorctl restart amavis/g' /etc/spamassassin/sa-update-hooks.d/amavisd-new
