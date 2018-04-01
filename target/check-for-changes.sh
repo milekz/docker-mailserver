@@ -25,6 +25,10 @@ else
     echo "host = ${PGSQL_DATABASE_HOST}" >> /etc/pam_pgsql.conf
     echo "password = ${PGSQL_DATABASE_PASSWORD}" >> /etc/pam_pgsql.conf
     echo "port = ${PGSQL_DATABASE_PORT}" >> /etc/pam_pgsql.conf
+    #prepare main.cf
+    sed -i '/virtual_/d' /etc/postfix/main.cf
+    cat /tmp/pgsql_virtual_postfix.conf >> /etc/main.cf
+    rm -f /tmp/pgsql_virtual_postfix.conf
     #do postgres virtual stuff here
     for filename in /tmp/pgsql_virtual_*; do
 	    cat /etc/pam_pgsql.conf ${filename} > ${filename}.cf
@@ -33,7 +37,7 @@ else
     echo "pw_type=crypt" >> /etc/pam_pgsql.conf
     echo "auth_query=SELECT passwd.password FROM domains LEFT JOIN passwd ON domains.id = passwd.domainid where (passwd.login::text || '@'::text) || domains.name::text = %u" >> /etc/pam_pgsql.conf
     supervisorctl restart saslauthd_pam
-
+    supervisorctl restart postfix
 
 while true; do
 sleep 2
