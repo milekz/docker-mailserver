@@ -6,6 +6,49 @@ log_date=$(date +"%Y-%m-%d %H:%M:%S ")
 sleep 5
 echo "${log_date} Start check-for-changes script."
 
+#pgsql stuff here
+
+
+
+if [ ! -v USE_PGSQL_DATABASE ] #note the lack of a $ sigil
+then
+    echo "USE_PGSQL_DATABASE variable is unset"
+elif [ -z "$USE_PGSQL_DATABASE" ]
+then
+    echo "USE_PGSQL_DATABASE Variable is set to an empty string"
+else
+    echo "USE_PGSQL_DATABASE Variable is set - setting files"
+    #pam section
+    echo "auth required pam_pgsql.so" > /etc/pam.d/smtp
+    echo "account required pam_pgsql.so" >> /etc/pam.d/smtp
+    echo "password required pam_pgsql.so" >> /etc/pam.d/smtp
+    #pam_pgsql
+    echo "database = ${PGSQL_DATABASE_NAME}" > /etc/pam_pgsql.conf
+    echo "user = ${PGSQL_DATABASE_USER}" >> /etc/pam_pgsql.conf
+    echo "host = ${PGSQL_DATABASE_HOST}" >> /etc/pam_pgsql.conf
+    echo "password = ${PGSQL_DATABASE_PASSWORD}" >> /etc/pam_pgsql.conf
+    echo "port = ${PGSQL_DATABASE_PORT}" >> /etc/pam_pgsql.conf
+    #do postgres virtual stuff here
+    for filename in /tmp/pgsql_virtual_*; do
+	    cat /etc/pam_pgsql.conf ${filename} > ${filename}.cf
+    done
+    mv /tmp/pgsql_virtual_*.cf /etc/postfix/ && rm -f /tmp/pgsql_virtual_*
+    echo "pw_type=crypt" >> /etc/pam_pgsql.conf
+    echo "auth_query=SELECT passwd.password FROM domains LEFT JOIN passwd ON domains.id = passwd.domainid where (passwd.login::text || '@'::text) || domains.name::text = %u" >> /etc/pam_pgsql.conf
+    supervisorctl restart saslauthd_pam
+
+
+while true; do
+sleep 2
+done
+exit
+
+fi
+
+
+# Prevent a start too early
+sleep 5
+
 # change directory
 cd /tmp/docker-mailserver
 
