@@ -43,6 +43,16 @@ else
     mv /tmp/pgsql_virtual_*.cf /etc/postfix/ && rm -f /tmp/pgsql_virtual_*
     echo "pw_type=crypt" >> /etc/pam_pgsql.conf
     echo "auth_query=SELECT passwd.password FROM domains LEFT JOIN passwd ON domains.id = passwd.domainid where (passwd.login::text || '@'::text) || domains.name::text = %u" >> /etc/pam_pgsql.conf
+    #dovecot
+    echo "connect = host=${PGSQL_DATABASE_HOST} port=${PGSQL_DATABASE_PORT} dbname=${PGSQL_DATABASE_NAME} user=${PGSQL_DATABASE_USER} password=${PGSQL_DATABASE_PASSWORD}" >> /etc/dovecot/dovecot-pgsql.conf.ext
+    cat /etc/dovecot/dovecot-pgsql.conf.ext >> /etc/dovecot/dovecot-sql.conf.ext
+    sed -i -e '/\!include auth-ldap\.conf\.ext/s/^/#/' /etc/dovecot/conf.d/10-auth.conf
+    sed -i -e '/\!include auth-passwdfile\.inc/s/^/#/' /etc/dovecot/conf.d/10-auth.conf
+    sed -i -e '/\!include auth-sql\.conf\.ext/s/^#//' /etc/dovecot/conf.d/10-auth.conf
+    sed -i -e '/mail_location/s/^/#/' /etc/dovecot/conf.d/10-mail.conf
+    echo "mail_location = maildir:/var/mail/%d/%n@%d" >> /etc/dovecot/conf.d/10-mail.conf
+    #
+    supervisorctl restart dovecot
     supervisorctl restart saslauthd_pam
     supervisorctl restart postfix
 
