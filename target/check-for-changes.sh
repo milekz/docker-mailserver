@@ -33,7 +33,7 @@ else
     #
     #prepare main.cf
     sed -i '/virtual_/d' /etc/postfix/main.cf
-    cat /tmp/pgsql_virtual_postfix.conf >> /etc/main.cf
+    cat /tmp/pgsql_virtual_postfix.conf >> /etc/postfix/main.cf
     rm -f /tmp/pgsql_virtual_postfix.conf
     #do postgres virtual stuff here
     for filename in /tmp/pgsql_virtual_*; do
