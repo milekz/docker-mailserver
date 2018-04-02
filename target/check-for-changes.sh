@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Prevent a start too early
+sleep 5
+
 # create date for log output
 log_date=$(date +"%Y-%m-%d %H:%M:%S ")
 
@@ -62,9 +65,6 @@ done
 
 fi
 
-
-# Prevent a start too early
-sleep 5
 
 # change directory
 cd /tmp/docker-mailserver
