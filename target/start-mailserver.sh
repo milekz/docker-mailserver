@@ -464,7 +464,8 @@ function _setup_dovecot() {
 	sed -i -e 's/#ssl = yes/ssl = yes/g' /etc/dovecot/conf.d/10-master.conf
 	sed -i -e 's/#port = 993/port = 993/g' /etc/dovecot/conf.d/10-master.conf
 	sed -i -e 's/#port = 995/port = 995/g' /etc/dovecot/conf.d/10-master.conf
-	sed -i -e 's/#ssl = yes/ssl = required/g' /etc/dovecot/conf.d/10-ssl.conf
+	#sed -i -e 's/#ssl = yes/ssl = required/g' /etc/dovecot/conf.d/10-ssl.conf
+	sed -i -e 's/#ssl = yes/ssl = yes/g' /etc/dovecot/conf.d/10-ssl.conf
 	sed -i 's/^postmaster_address = .*$/postmaster_address = '$POSTMASTER_ADDRESS'/g' /etc/dovecot/conf.d/15-lda.conf
 
 	# Enable Managesieve service by setting the symlink
