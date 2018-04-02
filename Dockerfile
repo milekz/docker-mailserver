@@ -45,6 +45,7 @@ RUN apt-get update -q --fix-missing && \
     lrzip \
     lzop \
     netcat-openbsd \
+    net-tools \
     nomarch \
     opendkim \
     opendkim-tools \
