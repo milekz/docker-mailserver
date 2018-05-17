@@ -12,3 +12,15 @@ for dname in */; do
 	      done
     cd ..
 done
+
+
+########
+#alternative
+#find "/var/mail/virtual/" -name courierimapsubscribed -print0 |  xargs -0r rename -v 's/courierimapsubscribed/subscriptions/'
+#find "/var/mail/virtual/" -name subscriptions -print0 | xargs -0r sed -i 's/INBOX\.//'
+#find "/var/mail/virtual/" -name courierimapuiddb -print0 |  xargs -0r rename -v 's/courierimapuiddb/dovecot-uidlist/'
+#find "/var/mail/virtual/" -name courierimaphieracl -print0 | xargs -0r rm -vrf
+#find "/var/mail/virtual/" -name courierimapacl -print0 | xargs -0r rm -vf
+#find "/var/mail/virtual/" -name courierimapkeywords -print0 | xargs -0r rm -vrf
+#chown -R vmail:vmail "/var/mail/virtual" 
+
