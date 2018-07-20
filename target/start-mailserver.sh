@@ -823,9 +823,19 @@ function _setup_ssl() {
 					sed -i -r 's~smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key~smtpd_tls_key_file=/etc/letsencrypt/live/'$HOSTNAME'/'"$KEY"'\.pem~g' /etc/postfix/main.cf
 
 					# Dovecot configuration
-					sed -i -e 's~ssl_cert = </etc/dovecot/ssl/dovecot\.pem~ssl_cert = </etc/letsencrypt/live/'$HOSTNAME'/fullchain\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
-					sed -i -e 's~ssl_key = </etc/dovecot/ssl/dovecot\.key~ssl_key = </etc/letsencrypt/live/'$HOSTNAME'/'"$KEY"'\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
+					#sed -i -e 's~ssl_cert = </etc/dovecot/ssl/dovecot\.pem~ssl_cert = </etc/letsencrypt/live/'$HOSTNAME'/fullchain\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
+					#sed -i -e 's~ssl_key = </etc/dovecot/ssl/dovecot\.key~ssl_key = </etc/letsencrypt/live/'$HOSTNAME'/'"$KEY"'\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
+                    sed -i -e '/ssl_cert/s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
+					sed -i -e '/ssl_key/s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
 
+					for le_domain in $(ls -d /etc/letsencrypt/live/* | awk -F"/" '{print $5}')
+					do
+						echo "local_name $le_domain {" >> /etc/dovecot/conf.d/10-ssl.conf
+						echo "ssl_cert = </etc/letsencrypt/live/$le_domain/fullchain.pem" >> /etc/dovecot/conf.d/10-ssl.conf
+						echo "ssl_cert = </etc/letsencrypt/live/$le_domain/privkey.pem" >> /etc/dovecot/conf.d/10-ssl.conf
+						echo "}" >> /etc/dovecot/conf.d/10-ssl.conf
+					done
+					
 					notify 'inf' "SSL configured with 'letsencrypt' certificates"
 				else
 					notify 'err' "Key filename not set!"
