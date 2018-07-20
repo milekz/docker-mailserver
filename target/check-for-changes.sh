@@ -36,8 +36,17 @@ else
     #
     #prepare main.cf
     sed -i '/virtual_/d' /etc/postfix/main.cf
-    cat /tmp/pgsql_virtual_postfix.conf >> /etc/postfix/main.cf
+    #cat /tmp/pgsql_virtual_postfix.conf >> /etc/postfix/main.cf
     rm -f /tmp/pgsql_virtual_postfix.conf
+    echo "virtual_mailbox_base = /var/mail" >> /etc/postfix/main.cf
+    echo "virtual_mailbox_domains = pgsql:/etc/postfix/pgsql_virtual_domains_maps.cf" >> /etc/postfix/main.cf
+    echo "virtual_mailbox_maps = pgsql:/etc/postfix/pgsql_virtual_mailbox_maps.cf" >> /etc/postfix/main.cf
+    echo "recipient_bcc_maps =  pgsql:/etc/postfix/pgsql_virtual_recipient_bcc_maps.cf" >> /etc/postfix/main.cf
+    echo "virtual_mailbox_limit = 5502400000" >> /etc/postfix/main.cf
+    echo "virtual_gid_maps = static:5000" >> /etc/postfix/main.cf
+    echo "virtual_minimum_uid = 5000" >> /etc/postfix/main.cf
+    echo "virtual_uid_maps = static:5000" >> /etc/postfix/main.cf
+    echo "virtual_transport = virtual" >> /etc/postfix/main.cf
     #do postgres virtual stuff here
     for filename in /tmp/pgsql_virtual_*; do
 	    cat /tmp/pgsql.conf ${filename} > ${filename}.cf
