@@ -825,8 +825,8 @@ function _setup_ssl() {
 					# Dovecot configuration
 					#sed -i -e 's~ssl_cert = </etc/dovecot/ssl/dovecot\.pem~ssl_cert = </etc/letsencrypt/live/'$HOSTNAME'/fullchain\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
 					#sed -i -e 's~ssl_key = </etc/dovecot/ssl/dovecot\.key~ssl_key = </etc/letsencrypt/live/'$HOSTNAME'/'"$KEY"'\.pem~g' /etc/dovecot/conf.d/10-ssl.conf
-                    sed -i -e '/ssl_cert/s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
-					sed -i -e '/ssl_key/s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
+                    sed -i -e '/ssl_cert /s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
+					sed -i -e '/ssl_key /s/^/#/' /etc/dovecot/conf.d/10-ssl.conf
 
 					for le_domain in $(ls -d /etc/letsencrypt/live/* | awk -F"/" '{print $5}')
 					do
