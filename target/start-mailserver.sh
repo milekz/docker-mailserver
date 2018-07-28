@@ -832,7 +832,7 @@ function _setup_ssl() {
 					do
 						echo "local_name $le_domain {" >> /etc/dovecot/conf.d/10-ssl.conf
 						echo "ssl_cert = </etc/letsencrypt/live/$le_domain/fullchain.pem" >> /etc/dovecot/conf.d/10-ssl.conf
-						echo "ssl_cert = </etc/letsencrypt/live/$le_domain/privkey.pem" >> /etc/dovecot/conf.d/10-ssl.conf
+						echo "ssl_key = </etc/letsencrypt/live/$le_domain/privkey.pem" >> /etc/dovecot/conf.d/10-ssl.conf
 						echo "}" >> /etc/dovecot/conf.d/10-ssl.conf
 					done
 					
