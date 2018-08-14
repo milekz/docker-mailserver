@@ -42,6 +42,7 @@ else
     echo "virtual_mailbox_domains = pgsql:/etc/postfix/pgsql_virtual_domains_maps.cf" >> /etc/postfix/main.cf
     echo "virtual_mailbox_maps = pgsql:/etc/postfix/pgsql_virtual_mailbox_maps.cf" >> /etc/postfix/main.cf
     echo "recipient_bcc_maps =  pgsql:/etc/postfix/pgsql_virtual_recipient_bcc_maps.cf" >> /etc/postfix/main.cf
+    echo "virtual_alias_maps = pgsql:/etc/postfix/pgsql_virtual_alias_maps.cf" >> /etc/postfix/main.cf
     echo "virtual_mailbox_limit = 5502400000" >> /etc/postfix/main.cf
     echo "virtual_gid_maps = static:5000" >> /etc/postfix/main.cf
     echo "virtual_minimum_uid = 5000" >> /etc/postfix/main.cf
